@@ -47,7 +47,7 @@ const proFishes = {
   ]
 }
 
-const DeepDiveGameScreen = ({ setSelectedDeepDiveScreen, userFishesAmount, setUserFishesAmount, isSoundEnabled, selectedFishesSkin }) => {
+const DeepDiveGameScreen = ({ setSelectedPingoScreen, userFishesAmount, setUserFishesAmount, isSoundEnabled, selectedFishesSkin }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const styles = createDeepDiveStyles(dimensions);
   const [isDeepDiveStarted, setIsDeepDiveStarted] = useState(false);
@@ -245,7 +245,7 @@ const DeepDiveGameScreen = ({ setSelectedDeepDiveScreen, userFishesAmount, setUs
           />
           <TouchableOpacity onPress={() => {
             if (!isDeepDiveStarted)
-              setSelectedDeepDiveScreen('Home');
+              setSelectedPingoScreen('Home');
             else {
               setIsDeepDiveStarted(false);
               setModalVisible(false);
@@ -600,7 +600,7 @@ const DeepDiveGameScreen = ({ setSelectedDeepDiveScreen, userFishesAmount, setUs
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(false);
-                setSelectedDeepDiveScreen('Home');
+                setSelectedPingoScreen('Home');
                 setIsDeepDiveStarted(false);
               }}
               style={{

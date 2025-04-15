@@ -48,12 +48,7 @@ const fontNunitoRegular = 'Nunito-Regular';
 
 const PingoHomeScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [selectedDeepDiveScreen, setSelectedDeepDiveScreen] = useState('Home');
-
-  const styles = createDeepDiveStyles(dimensions);
-
-  const [userFishesAmount, setUserFishesAmount] = useState(0);
-  const [selectedFishesSkin, setSelectedFishSkin] = useState(1);
+  const [selectedPingoScreen, setSelectedPingoScreen] = useState('Home');
 
   const [isSoundEnabled, setSoundEnabled] = useState(true);
   const [backgroundMusic, setBackgroundMusic] = useState(true);
@@ -72,7 +67,7 @@ const PingoHomeScreen = () => {
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
         />
-        {selectedDeepDiveScreen === 'Home' ? (
+        {selectedPingoScreen === 'Home' ? (
           <SafeAreaView style={{
             flex: 1,
             alignItems: 'center',
@@ -106,7 +101,7 @@ const PingoHomeScreen = () => {
               <TouchableOpacity
                 key={oingoBtn.id}
                 onPress={() => {
-                  setSelectedDeepDiveScreen(oingoBtn.pingoScreen);
+                  setSelectedPingoScreen(oingoBtn.pingoScreen);
                 }}
                 style={{
                   backgroundColor: 'white',
@@ -133,48 +128,22 @@ const PingoHomeScreen = () => {
               </TouchableOpacity>
             ))}
           </SafeAreaView>
-        ) : selectedDeepDiveScreen === 'AboutDeepDive' ? (
-          <DeepDiveAboutScreen setSelectedDeepDiveScreen={setSelectedDeepDiveScreen} />
-        ) : selectedDeepDiveScreen === 'PingoSettings' ? (
-          <PingoSettingsScreen setSelectedDeepDiveScreen={setSelectedDeepDiveScreen} selectedDeepDiveScreen={selectedDeepDiveScreen} backgroundMusic={backgroundMusic} setBackgroundMusic={setBackgroundMusic} />
-        ) : selectedDeepDiveScreen === 'Shop' ? (
-          <DeepDiveShopScreen setSelectedDeepDiveScreen={setSelectedDeepDiveScreen} selectedDeepBackground={selectedDeepBackground} setSelectedDeepBackground={setSelectedDeepBackground} deepBackgrounds={deepBackgrounds} fishSkins={fishSkins} setSelectedFishSkin={setSelectedFishSkin} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount} />
-        ) : selectedDeepDiveScreen === 'DeepDiveGame' ? (
-          <DeepDiveGameScreen setSelectedDeepDiveScreen={setSelectedDeepDiveScreen} selectedDeepBackground={selectedDeepBackground} setSelectedDeepBackground={setSelectedDeepBackground} deepBackgrounds={deepBackgrounds} fishSkins={fishSkins} setSelectedFishSkin={setSelectedFishSkin} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount}
+        ) : selectedPingoScreen === 'AboutDeepDive' ? (
+          <DeepDiveAboutScreen setSelectedPingoScreen={setSelectedPingoScreen} />
+        ) : selectedPingoScreen === 'PingoSettings' ? (
+          <PingoSettingsScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedPingoScreen={selectedPingoScreen} backgroundMusic={backgroundMusic} setBackgroundMusic={setBackgroundMusic} />
+        ) : selectedPingoScreen === 'Shop' ? (
+          <DeepDiveShopScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedDeepBackground={selectedDeepBackground} setSelectedDeepBackground={setSelectedDeepBackground} deepBackgrounds={deepBackgrounds} fishSkins={fishSkins} setSelectedFishSkin={setSelectedFishSkin} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount} />
+        ) : selectedPingoScreen === 'DeepDiveGame' ? (
+          <DeepDiveGameScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedDeepBackground={selectedDeepBackground} setSelectedDeepBackground={setSelectedDeepBackground} deepBackgrounds={deepBackgrounds} fishSkins={fishSkins} setSelectedFishSkin={setSelectedFishSkin} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount}
             isSoundEnabled={isSoundEnabled} setSoundEnabled={setSoundEnabled} selectedFishesSkin={selectedFishesSkin}
           />
-        ) : selectedDeepDiveScreen === 'Score' ? (
-          <DeepDiveScoresScreen setSelectedDeepDiveScreen={setSelectedDeepDiveScreen} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount} />
+        ) : selectedPingoScreen === 'Score' ? (
+          <DeepDiveScoresScreen setSelectedPingoScreen={setSelectedPingoScreen} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount} />
         ) : null}
       </View>
     </TouchableWithoutFeedback>
   );
 };
-
-const createDeepDiveStyles = (dimensions) => StyleSheet.create({
-  deepYellowOranGradient: {
-    left: 0,
-    right: 0,
-    top: 0,
-    position: 'absolute',
-    zIndex: 0,
-    shadowOpacity: 0.4,
-    shadowColor: 'black',
-    shadowRadius: dimensions.width * 0.03,
-    elevation: 7,
-    bottom: 0,
-    shadowOffset: {
-      width: dimensions.width * 0.002,
-      height: dimensions.height * 0.01
-    },
-  },
-  deepGradientButtonsStyles: {
-    width: dimensions.width * 0.17,
-    height: dimensions.width * 0.17,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  }
-});
 
 export default PingoHomeScreen;

@@ -18,7 +18,7 @@ import GradientText from '../components/GradientText';
 const fontNunitoBlack = 'Nunito-Black';
 const fontNunitoRegular = 'Nunito-Regular';
 
-const PingoSettingsScreen = ({ setSelectedDeepDiveScreen, selectedDeepDiveScreen, backgroundMusic, setBackgroundMusic }) => {
+const PingoSettingsScreen = ({ setSelectedPingoScreen, selectedPingoScreen, backgroundMusic, setBackgroundMusic }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const styles = createDeepDiveAboutStyles(dimensions);
 
@@ -71,7 +71,7 @@ const PingoSettingsScreen = ({ setSelectedDeepDiveScreen, selectedDeepDiveScreen
         <SafeAreaView style={{ width: dimensions.width }}>
             <TouchableOpacity
                 onPress={() => {
-                    setSelectedDeepDiveScreen('Home');
+                    setSelectedPingoScreen('Home');
                 }}
                 style={{
                     borderRadius: dimensions.width * 0.5,

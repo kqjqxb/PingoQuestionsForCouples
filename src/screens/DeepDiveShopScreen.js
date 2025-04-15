@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const fontPixelifySansRegular = 'PixelifySans-Regular';
 const fontPlay = 'Play-Regular';
 
-const DeepDiveShopScreen = ({ setSelectedDeepDiveScreen, deepBackgrounds, fishSkins, setSelectedFishSkin, setSelectedDeepBackground, userFishesAmount, setUserFishesAmount }) => {
+const DeepDiveShopScreen = ({ setSelectedPingoScreen, deepBackgrounds, fishSkins, setSelectedFishSkin, setSelectedDeepBackground, userFishesAmount, setUserFishesAmount }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [bgCurrentIndex, setBgCurrentIndex] = useState(0);
   const [fishSkinCurrentIndex, setFishSkinCurrentIndex] = useState(0);
@@ -159,7 +159,7 @@ const DeepDiveShopScreen = ({ setSelectedDeepDiveScreen, deepBackgrounds, fishSk
             end={{ x: 0.5, y: 1 }}
           />
           <TouchableOpacity onPress={() => {
-            setSelectedDeepDiveScreen('Home');
+            setSelectedPingoScreen('Home');
           }}>
             <Image
               source={require('../assets/icons/backDeepIcon.png')}

@@ -14,7 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const fontPixelifySansRegular = 'PixelifySans-Regular';
 const fontPlay = 'Play-Regular';
 
-const DeepDiveScoresScreen = ({ setSelectedDeepDiveScreen, selectedDeepDiveScreen }) => {
+const DeepDiveScoresScreen = ({ setSelectedPingoScreen, selectedPingoScreen }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const styles = createDeepDiveAboutStyles(dimensions);
     const [scores, setScores] = useState([]);
@@ -53,7 +53,7 @@ const DeepDiveScoresScreen = ({ setSelectedDeepDiveScreen, selectedDeepDiveScree
                     end={{ x: 0.5, y: 1 }}
                 />
                 <TouchableOpacity onPress={() => {
-                    setSelectedDeepDiveScreen('Home');
+                    setSelectedPingoScreen('Home');
                 }}>
                     <Image
                         source={require('../assets/icons/backDeepIcon.png')}

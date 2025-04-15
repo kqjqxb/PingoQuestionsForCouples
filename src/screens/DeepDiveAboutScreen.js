@@ -31,7 +31,7 @@ const aboutFishes = [
     },
 ]
 
-const DeepDiveAboutScreen = ({ setSelectedDeepDiveScreen }) => {
+const DeepDiveAboutScreen = ({ setSelectedPingoScreen }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const styles = createDeepDiveAboutStyles(dimensions);
 
@@ -71,7 +71,7 @@ const DeepDiveAboutScreen = ({ setSelectedDeepDiveScreen }) => {
                 />
                 <TouchableOpacity style={{
                 }} onPress={() => {
-                    setSelectedDeepDiveScreen('Home');
+                    setSelectedPingoScreen('Home');
                 }}>
                     <Image
                         source={require('../assets/icons/backDeepIcon.png')}
