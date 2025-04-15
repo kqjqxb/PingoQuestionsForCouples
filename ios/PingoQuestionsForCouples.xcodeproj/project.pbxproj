@@ -8,10 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-PingoQuestionsForCouples.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-PingoQuestionsForCouples.a */; };
+		0FFE93B359C143B9BF145F70 /* Nunito-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3B17422ECA874753BEDC4FD9 /* Nunito-Light.ttf */; };
+		103031A1C2F04EA69DB3444B /* Nunito-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF2E3DCCCE9D413EA5FD1A16 /* Nunito-ExtraBold.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		2D4EFE87064E4C50BC77C2DF /* Nunito-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 569A4F34815E46AE9C9413DE /* Nunito-Regular.ttf */; };
+		49A78C18257340C3BA10C075 /* Play-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 32BB81FD4D714111AAA9734C /* Play-Bold.ttf */; };
+		6B19D46ED4D04DFA86A794B0 /* Nunito-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4214010FAC094AEF9E5A9419 /* Nunito-SemiBold.ttf */; };
+		748915FD3E0947649FD2D5B0 /* Nunito-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7AE6F022E0974AEAA65947AF /* Nunito-Bold.ttf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
+		79A74FF1F4164BEBA36C645F /* PixelifySans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49F09E2C09584F389CBD6EE3 /* PixelifySans-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A0EE250750874752B64924DD /* Nunito-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48415AEFC19E4F088614DC1A /* Nunito-Medium.ttf */; };
+		A40AAE92617741B28D8007AE /* PixelifySans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A47B52673E7242A2A5FB7669 /* PixelifySans-Regular.ttf */; };
 		DCA2F9B5826099C460EF1836 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		E2171B2411B443FA91AB54B4 /* Play-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 166C3AEBCA5143518F66039B /* Play-Regular.ttf */; };
+		F1B8519ACCFF4186B339BF21 /* Nunito-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2A92C2021E334DA88BA9F7F6 /* Nunito-Black.ttf */; };
+		F2BE37CF16404182B47405BE /* PixelifySans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E48BB73DFFD47D78E85A5FD /* PixelifySans-Medium.ttf */; };
+		F827E0366ED3447EAD240541 /* PixelifySans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC4ED60F0B744B6D8A281918 /* PixelifySans-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,11 +32,24 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PingoQuestionsForCouples/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PingoQuestionsForCouples/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = PingoQuestionsForCouples/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		166C3AEBCA5143518F66039B /* Play-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Play-Regular.ttf"; path = "../src/assets/fonts/Play-Regular.ttf"; sourceTree = "<group>"; };
+		2A92C2021E334DA88BA9F7F6 /* Nunito-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Black.ttf"; path = "../src/assets/fonts/Nunito-Black.ttf"; sourceTree = "<group>"; };
+		32BB81FD4D714111AAA9734C /* Play-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Play-Bold.ttf"; path = "../src/assets/fonts/Play-Bold.ttf"; sourceTree = "<group>"; };
+		3B17422ECA874753BEDC4FD9 /* Nunito-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Light.ttf"; path = "../src/assets/fonts/Nunito-Light.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-PingoQuestionsForCouples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PingoQuestionsForCouples.debug.xcconfig"; path = "Target Support Files/Pods-PingoQuestionsForCouples/Pods-PingoQuestionsForCouples.debug.xcconfig"; sourceTree = "<group>"; };
+		4214010FAC094AEF9E5A9419 /* Nunito-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-SemiBold.ttf"; path = "../src/assets/fonts/Nunito-SemiBold.ttf"; sourceTree = "<group>"; };
+		48415AEFC19E4F088614DC1A /* Nunito-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Medium.ttf"; path = "../src/assets/fonts/Nunito-Medium.ttf"; sourceTree = "<group>"; };
+		49F09E2C09584F389CBD6EE3 /* PixelifySans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PixelifySans-Bold.ttf"; path = "../src/assets/fonts/PixelifySans-Bold.ttf"; sourceTree = "<group>"; };
+		569A4F34815E46AE9C9413DE /* Nunito-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Regular.ttf"; path = "../src/assets/fonts/Nunito-Regular.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-PingoQuestionsForCouples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PingoQuestionsForCouples.release.xcconfig"; path = "Target Support Files/Pods-PingoQuestionsForCouples/Pods-PingoQuestionsForCouples.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-PingoQuestionsForCouples.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PingoQuestionsForCouples.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = PingoQuestionsForCouples/AppDelegate.swift; sourceTree = "<group>"; };
+		7AE6F022E0974AEAA65947AF /* Nunito-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Bold.ttf"; path = "../src/assets/fonts/Nunito-Bold.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PingoQuestionsForCouples/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9E48BB73DFFD47D78E85A5FD /* PixelifySans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PixelifySans-Medium.ttf"; path = "../src/assets/fonts/PixelifySans-Medium.ttf"; sourceTree = "<group>"; };
+		A47B52673E7242A2A5FB7669 /* PixelifySans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PixelifySans-Regular.ttf"; path = "../src/assets/fonts/PixelifySans-Regular.ttf"; sourceTree = "<group>"; };
+		BC4ED60F0B744B6D8A281918 /* PixelifySans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PixelifySans-SemiBold.ttf"; path = "../src/assets/fonts/PixelifySans-SemiBold.ttf"; sourceTree = "<group>"; };
+		BF2E3DCCCE9D413EA5FD1A16 /* Nunito-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-ExtraBold.ttf"; path = "../src/assets/fonts/Nunito-ExtraBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -75,6 +101,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				94570087E3034913BFC9AF24 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -87,6 +114,26 @@
 				13B07F961A680F5B00A75B9A /* PingoQuestionsForCouples.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		94570087E3034913BFC9AF24 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2A92C2021E334DA88BA9F7F6 /* Nunito-Black.ttf */,
+				7AE6F022E0974AEAA65947AF /* Nunito-Bold.ttf */,
+				BF2E3DCCCE9D413EA5FD1A16 /* Nunito-ExtraBold.ttf */,
+				3B17422ECA874753BEDC4FD9 /* Nunito-Light.ttf */,
+				48415AEFC19E4F088614DC1A /* Nunito-Medium.ttf */,
+				569A4F34815E46AE9C9413DE /* Nunito-Regular.ttf */,
+				4214010FAC094AEF9E5A9419 /* Nunito-SemiBold.ttf */,
+				49F09E2C09584F389CBD6EE3 /* PixelifySans-Bold.ttf */,
+				9E48BB73DFFD47D78E85A5FD /* PixelifySans-Medium.ttf */,
+				A47B52673E7242A2A5FB7669 /* PixelifySans-Regular.ttf */,
+				BC4ED60F0B744B6D8A281918 /* PixelifySans-SemiBold.ttf */,
+				32BB81FD4D714111AAA9734C /* Play-Bold.ttf */,
+				166C3AEBCA5143518F66039B /* Play-Regular.ttf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -161,6 +208,19 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				DCA2F9B5826099C460EF1836 /* PrivacyInfo.xcprivacy in Resources */,
+				F1B8519ACCFF4186B339BF21 /* Nunito-Black.ttf in Resources */,
+				748915FD3E0947649FD2D5B0 /* Nunito-Bold.ttf in Resources */,
+				103031A1C2F04EA69DB3444B /* Nunito-ExtraBold.ttf in Resources */,
+				0FFE93B359C143B9BF145F70 /* Nunito-Light.ttf in Resources */,
+				A0EE250750874752B64924DD /* Nunito-Medium.ttf in Resources */,
+				2D4EFE87064E4C50BC77C2DF /* Nunito-Regular.ttf in Resources */,
+				6B19D46ED4D04DFA86A794B0 /* Nunito-SemiBold.ttf in Resources */,
+				79A74FF1F4164BEBA36C645F /* PixelifySans-Bold.ttf in Resources */,
+				F2BE37CF16404182B47405BE /* PixelifySans-Medium.ttf in Resources */,
+				A40AAE92617741B28D8007AE /* PixelifySans-Regular.ttf in Resources */,
+				F827E0366ED3447EAD240541 /* PixelifySans-SemiBold.ttf in Resources */,
+				49A78C18257340C3BA10C075 /* Play-Bold.ttf in Resources */,
+				E2171B2411B443FA91AB54B4 /* Play-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +320,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PingoQuestionsForCouples/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -273,7 +334,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pingo.questions.for.couples.app;
 				PRODUCT_NAME = PingoQuestionsForCouples;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -288,6 +349,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = PingoQuestionsForCouples/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -300,7 +362,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pingo.questions.for.couples.app;
 				PRODUCT_NAME = PingoQuestionsForCouples;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -376,10 +438,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -448,10 +507,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
