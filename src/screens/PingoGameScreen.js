@@ -18,7 +18,7 @@ import GradientText from '../components/GradientText';
 const fontNunitoBlack = 'Nunito-Black';
 const fontNunitoRegular = 'Nunito-Regular';
 
-const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
+const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const styles = createPingoSettingsStyles(dimensions);
 
@@ -344,4 +344,4 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
 const createPingoSettingsStyles = (dimensions) => StyleSheet.create({
 });
 
-export default PingoSettingsScreen;
+export default PingoGameScreen;

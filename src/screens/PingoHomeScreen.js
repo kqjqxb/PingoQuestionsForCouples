@@ -10,16 +10,14 @@ import {
   TouchableWithoutFeedback,
   Text,
 } from 'react-native';
-import DeepDiveAboutScreen from './DeepDiveAboutScreen';
 import GradientText from '../components/GradientText';
 
 import LinearGradient from 'react-native-linear-gradient';
 import PingoSettingsScreen from './PingoSettingsScreen';
-import DeepDiveShopScreen from './DeepDiveShopScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DeepDiveGameScreen from './DeepDiveGameScreen';
-import DeepDiveScoresScreen from './DeepDiveScoresScreen';
 import PingoHowToPlayScreen from './PingoHowToPlayScreen';
+import PingoYourMomentsScreen from './PingoYourMomentsScreen';
+import PingoGameScreen from './PingoGameScreen';
 
 const pingoButtons = [
   {
@@ -52,7 +50,6 @@ const PingoHomeScreen = () => {
   const [selectedPingoScreen, setSelectedPingoScreen] = useState('Home');
 
   const [isSoundEnabled, setSoundEnabled] = useState(true);
-  const [backgroundMusic, setBackgroundMusic] = useState(true);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -129,15 +126,12 @@ const PingoHomeScreen = () => {
               </TouchableOpacity>
             ))}
           </SafeAreaView>
-        ) : selectedPingoScreen === 'AboutDeepDive' ? (
-          <DeepDiveAboutScreen setSelectedPingoScreen={setSelectedPingoScreen} />
         ) : selectedPingoScreen === 'PingoSettings' ? (
-          <PingoSettingsScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedPingoScreen={selectedPingoScreen} backgroundMusic={backgroundMusic} setBackgroundMusic={setBackgroundMusic} />
-        ) : selectedPingoScreen === 'Shop' ? (
-          <DeepDiveShopScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedDeepBackground={selectedDeepBackground} setSelectedDeepBackground={setSelectedDeepBackground} deepBackgrounds={deepBackgrounds} fishSkins={fishSkins} setSelectedFishSkin={setSelectedFishSkin} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount} />
-        ) : selectedPingoScreen === 'DeepDiveGame' ? (
-          <DeepDiveGameScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedDeepBackground={selectedDeepBackground} setSelectedDeepBackground={setSelectedDeepBackground} deepBackgrounds={deepBackgrounds} fishSkins={fishSkins} setSelectedFishSkin={setSelectedFishSkin} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount}
-            isSoundEnabled={isSoundEnabled} setSoundEnabled={setSoundEnabled} selectedFishesSkin={selectedFishesSkin}
+          <PingoSettingsScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedPingoScreen={selectedPingoScreen} />
+        ) : selectedPingoScreen === 'PingoMoments' ? (
+          <PingoYourMomentsScreen setSelectedPingoScreen={setSelectedPingoScreen} />
+        ) : selectedPingoScreen === 'PingoGame' ? (
+          <PingoGameScreen setSelectedPingoScreen={setSelectedPingoScreen} 
           />
         ) : selectedPingoScreen === 'PingoRules' ? (
           <PingoHowToPlayScreen setSelectedPingoScreen={setSelectedPingoScreen}  />
