@@ -20,7 +20,7 @@ const fontNunitoRegular = 'Nunito-Regular';
 
 const PingoSettingsScreen = ({ setSelectedPingoScreen, selectedPingoScreen, backgroundMusic, setBackgroundMusic }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-    const styles = createDeepDiveAboutStyles(dimensions);
+    const styles = createPingoSettingsStyles(dimensions);
 
     const [sounds, setSounds] = useState(false);
     const [notifications, setNotifications] = useState(false);
@@ -341,31 +341,7 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, selectedPingoScreen, back
     );
 };
 
-const createDeepDiveAboutStyles = (dimensions) => StyleSheet.create({
-    deepYellowOrangGradient: {
-        left: 0,
-        right: 0,
-        top: 0,
-        position: 'absolute',
-        zIndex: 0,
-        shadowOpacity: 0.2,
-        shadowColor: 'black',
-        shadowRadius: dimensions.width * 0.03,
-        elevation: 7,
-        bottom: 0,
-        shadowOffset: {
-            width: dimensions.width * 0.002,
-            height: dimensions.height * 0.01
-        },
-    },
-    deepGradientButtonsStyles: {
-        width: dimensions.width * 0.17,
-        height: dimensions.width * 0.17,
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-    },
-
+const createPingoSettingsStyles = (dimensions) => StyleSheet.create({
 });
 
 export default PingoSettingsScreen;

@@ -19,6 +19,7 @@ import DeepDiveShopScreen from './DeepDiveShopScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeepDiveGameScreen from './DeepDiveGameScreen';
 import DeepDiveScoresScreen from './DeepDiveScoresScreen';
+import PingoHowToPlayScreen from './PingoHowToPlayScreen';
 
 const pingoButtons = [
   {
@@ -138,8 +139,8 @@ const PingoHomeScreen = () => {
           <DeepDiveGameScreen setSelectedPingoScreen={setSelectedPingoScreen} selectedDeepBackground={selectedDeepBackground} setSelectedDeepBackground={setSelectedDeepBackground} deepBackgrounds={deepBackgrounds} fishSkins={fishSkins} setSelectedFishSkin={setSelectedFishSkin} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount}
             isSoundEnabled={isSoundEnabled} setSoundEnabled={setSoundEnabled} selectedFishesSkin={selectedFishesSkin}
           />
-        ) : selectedPingoScreen === 'Score' ? (
-          <DeepDiveScoresScreen setSelectedPingoScreen={setSelectedPingoScreen} userFishesAmount={userFishesAmount} setUserFishesAmount={setUserFishesAmount} />
+        ) : selectedPingoScreen === 'PingoRules' ? (
+          <PingoHowToPlayScreen setSelectedPingoScreen={setSelectedPingoScreen}  />
         ) : null}
       </View>
     </TouchableWithoutFeedback>
