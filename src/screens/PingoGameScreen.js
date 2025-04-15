@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     View,
     Text,
@@ -13,6 +13,8 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Alert,
+    PanResponder,
+    Animated,
 } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 import LinearGradient from 'react-native-linear-gradient';
@@ -66,11 +68,172 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
 
     const [selectBallForPlayer, setSelectBallForPlayer] = useState(1);
 
+    const fallAnim1 = useRef(new Animated.Value(0)).current;
+    const fallAnim2 = useRef(new Animated.Value(0)).current;
 
+    const [threadCut1, setThreadCut1] = useState(false);
+    const [threadCut2, setThreadCut2] = useState(false);
+
+    const [winnerBall, setWinnerBall] = useState(null);
+    const [isBallsFalled, setIsBallsFalled] = useState(false);
+    const [isReadyVisibleNow, setIsReadyVisibleNow] = useState(true);
+    const [answerWidth, setAnswerWidth] = useState(0);
+
+    const panStartXRef = useRef(0);
+
+    const fullPanResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: (evt, gestureState) => true,
+            onMoveShouldSetPanResponder: (evt, gestureState) => true,
+            onPanResponderGrant: (evt, gestureState) => {
+                panStartXRef.current = evt.nativeEvent.pageX;
+                console.log("FullPan: onPanResponderGrant, startX =", panStartXRef.current);
+            },
+            onPanResponderRelease: (evt, gestureState) => {
+                console.log("FullPan: onPanResponderRelease, dx =", gestureState.dx);
+                const startX = panStartXRef.current;
+                const thread1Center = dimensions.width * 0.25;
+                const thread2Center = dimensions.width * 0.75;
+                const thresholdDistance = 50;
+                if (Math.abs(gestureState.dx) > 30) {
+                    if (!threadCut1 && Math.abs(startX - thread1Center) < thresholdDistance) {
+                        console.log("FullPan: Cutting thread1.");
+                        setThreadCut1(true);
+                        if (!winnerBall) {
+                            setWinnerBall(selected1Ball);
+                            setTimeout(() => {
+                                setIsBallsFalled(true);
+                                setTimeout(() => {
+                                    setIsReadyVisibleNow(false);
+                                }, 2500);
+                            }, 1000);
+
+                        }
+                        Animated.timing(fallAnim1, {
+                            toValue: dimensions.height * 0.5,
+                            duration: 1000,
+                            useNativeDriver: true,
+                        }).start(() => {
+                            console.log("FullPan: Thread1 fall animation complete.");
+                        });
+                    }
+                    if (!threadCut2 && Math.abs(startX - thread2Center) < thresholdDistance) {
+                        console.log("FullPan: Cutting thread2.");
+                        setThreadCut2(true);
+                        if (!winnerBall) {
+                            setWinnerBall(selected2Ball);
+                            setTimeout(() => {
+                                setIsBallsFalled(true);
+                                setTimeout(() => {
+                                    setIsReadyVisibleNow(false);
+                                }, 2500);
+                            }, 1000);
+                        }
+                        Animated.timing(fallAnim2, {
+                            toValue: dimensions.height * 0.5,
+                            duration: 1000,
+                            useNativeDriver: true,
+                        }).start(() => {
+                            console.log("FullPan: Thread2 fall animation complete.");
+                        });
+                    }
+                }
+            },
+        })
+    ).current;
+
+    const renderGame = () => {
+        const threadTop = dimensions.height * 0.1;
+        const threadHeight = dimensions.height * 0.15;
+        const ballInitialTop = threadTop + threadHeight;
+
+        return (
+            <>
+                {!threadCut1 && (
+                    <View
+                        style={{
+                            position: 'absolute',
+                            left: dimensions.width * 0.25 - 25,
+                            top: threadTop,
+                            width: 50,
+                            height: threadHeight,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                width: 2,
+                                height: '100%',
+                                backgroundColor: 'white',
+                            }}
+                        />
+                    </View>
+                )}
+                {/* Куля 1 */}
+                <Animated.View
+                    style={{
+                        position: 'absolute',
+                        left: dimensions.width * 0.25 - (dimensions.height * 0.1) / 2,
+                        top: ballInitialTop,
+                        transform: [{ translateY: fallAnim1 }],
+                    }}
+                >
+                    <Image
+                        source={selected1Ball.image}
+                        style={{
+                            width: dimensions.height * 0.1,
+                            height: dimensions.height * 0.1,
+                        }}
+                    />
+                </Animated.View>
+
+                {/* Нитка 2: рендеримо, якщо не перерізана */}
+                {!threadCut2 && (
+                    <View
+                        style={{
+                            position: 'absolute',
+                            right: dimensions.width * 0.25 - 25,
+                            top: threadTop,
+                            width: 50,
+                            height: threadHeight,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                width: 2,
+                                height: '100%',
+                                backgroundColor: 'white',
+                            }}
+                        />
+                    </View>
+                )}
+                {/* Куля 2 */}
+                <Animated.View
+                    style={{
+                        position: 'absolute',
+                        right: dimensions.width * 0.25 - (dimensions.height * 0.1) / 2,
+                        top: ballInitialTop,
+                        transform: [{ translateY: fallAnim2 }],
+                    }}
+                >
+                    <Image
+                        source={selected2Ball.image}
+                        style={{
+                            width: dimensions.height * 0.1,
+                            height: dimensions.height * 0.1,
+                        }}
+                    />
+                </Animated.View>
+            </>
+        );
+    };
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <SafeAreaView style={{ width: dimensions.width }}>
+            <SafeAreaView style={{ flex: 1, width: dimensions.width }}>
                 {!isPingoGameStarted && (
                     <View style={{
                         width: dimensions.width * 0.9,
@@ -205,7 +368,7 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                         <TextInput
                                             placeholder='NAME P1'
                                             placeholderTextColor='white'
-                                            maxLength={15}
+                                            maxLength={10}
                                             placeholderStyle={{
                                                 color: 'white',
                                                 fontFamily: fontNunitoBlack,
@@ -265,7 +428,7 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                         <TextInput
                                             placeholder='NAME P2'
                                             placeholderTextColor='white'
-                                            maxLength={15}
+                                            maxLength={10}
                                             placeholderStyle={{
                                                 color: 'white',
                                                 fontFamily: fontNunitoBlack,
@@ -333,31 +496,294 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                         )}
                     </>
                 ) : (
-                    <>
-                        <View style={{
-                            backgroundColor: 'white',
-                            width: dimensions.width * 0.8,
-                            height: dimensions.height * 0.09,
-                            borderRadius: dimensions.width * 0.1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                        }}>
-                            <GradientText
-                                text='Cut the threads'
+                    !isBallsFalled ? (
+                        <View style={{ flex: 1 }} {...fullPanResponder.panHandlers}>
+                            <View
                                 style={{
-
-                                    textAlign: 'center',
-                                    fontSize: dimensions.width * 0.05,
-                                    maxWidth: dimensions.width * 0.89,
+                                    backgroundColor: 'white',
+                                    width: dimensions.width * 0.8,
+                                    height: dimensions.height * 0.09,
+                                    borderRadius: dimensions.width * 0.1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: dimensions.height * 0.01,
                                     alignSelf: 'center',
-                                    fontFamily: fontNunitoBlack,
-                                    textTransform: 'uppercase',
-                                }}
-                                gradientColors={['#EF1895', '#1D0C35']}
-                            />
+                                }}>
+                                <GradientText
+                                    text='Cut the threads'
+                                    style={styles.gradientTextStyles}
+                                    gradientColors={['#EF1895', '#1D0C35']}
+                                />
+                            </View>
+                            {renderGame()}
                         </View>
-                    </>
+                    ) : (
+                        isReadyVisibleNow ? (
+                            <>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontFamily: fontNunitoBlack,
+                                        fontSize: dimensions.width * 0.08,
+                                        color: 'white',
+                                        textTransform: 'uppercase',
+                                        paddingHorizontal: dimensions.width * 0.07,
+                                        marginTop: dimensions.height * 0.02,
+                                    }}>
+                                    PLAYER WITH {'\n'}BALL ANSWERS
+                                </Text>
+                                <Image
+                                    source={winnerBall.image}
+                                    style={{
+                                        width: dimensions.height * 0.25,
+                                        height: dimensions.height * 0.25,
+                                        alignSelf: 'center',
+                                        marginTop: dimensions.height * 0.05,
+                                    }}
+                                />
+
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontFamily: fontNunitoRegular,
+                                        fontSize: dimensions.width * 0.08,
+                                        color: 'white',
+                                        textTransform: 'uppercase',
+                                        paddingHorizontal: dimensions.width * 0.07,
+                                        marginTop: dimensions.height * 0.05,
+                                    }}>
+                                    Get ready
+                                </Text>
+                            </>
+                        ) : (
+                            <>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontFamily: fontNunitoBlack,
+                                        fontSize: dimensions.width * 0.055,
+                                        color: 'white',
+                                        textTransform: 'uppercase',
+                                        paddingHorizontal: dimensions.width * 0.07,
+                                        marginTop: dimensions.height * 0.02,
+                                    }}>
+                                    Time for an answer!
+                                </Text>
+
+                                <View style={{
+                                    alignSelf: 'center',
+                                    width: dimensions.width * 0.8,
+                                    backgroundColor: 'white',
+                                    paddingHorizontal: dimensions.width * 0.05,
+                                    paddingVertical: dimensions.height * 0.025,
+                                    borderRadius: dimensions.width * 0.14,
+                                    marginTop: dimensions.height * 0.04
+                                }}>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            alignSelf: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        onLayout={(e) => setAnswerWidth(e.nativeEvent.layout.width)}
+                                    >
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                fontFamily: fontNunitoBlack,
+                                                fontSize: dimensions.width * 0.065,
+                                                color: 'black',
+                                                textTransform: 'uppercase',
+                                            }}
+                                        >
+                                            {player1Name}
+                                        </Text>
+                                        <Image
+                                            source={selected1Ball.image}
+                                            style={{
+                                                width: dimensions.height * 0.06,
+                                                height: dimensions.height * 0.06,
+                                                marginLeft: dimensions.width * 0.04,
+                                            }}
+                                        />
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            width: answerWidth,
+                                            borderRadius: answerWidth / 2,
+                                            height: dimensions.height * 0.01,
+                                            marginTop: dimensions.height * 0.01,
+                                            alignSelf: 'center'
+                                        }}
+                                    >
+                                        <LinearGradient
+                                            style={{ flex: 1, borderRadius: answerWidth / 2 }}
+                                            colors={['#FA199A', '#1A0C34']}
+                                            start={{ x: 0, y: 0.5 }}
+                                            end={{ x: 1, y: 0.5 }}
+                                        />
+                                    </View>
+
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontFamily: fontNunitoBlack,
+                                            fontSize: dimensions.width * 0.034,
+                                            color: 'black',
+                                            textTransform: 'uppercase',
+                                            marginTop: dimensions.height * 0.03,
+                                        }}>
+                                        Your ball has hit the hole,{'\n'}
+                                        now answer the questions
+                                    </Text>
+
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        alignSelf: 'center',
+                                        justifyContent: 'center',
+                                        marginTop: dimensions.height * 0.03,
+                                    }}>
+                                        <View style={{
+                                            width: dimensions.width * 0.4,
+                                            backgroundColor: 'transparent',
+                                            height: dimensions.height * 0.075,
+
+                                            borderColor: '#DADADA',
+                                            borderRadius: dimensions.width * 0.04,
+                                            borderWidth: dimensions.width * 0.003,
+                                            paddingHorizontal: dimensions.width * 0.025,
+                                            alignItems: 'flex-start',
+                                            justifyContent: 'center'
+                                        }}>
+                                            <View style={{
+                                                width: dimensions.width * 0.3,
+                                                height: dimensions.height * 0.055,
+                                            }}>
+                                                <LinearGradient
+                                                    style={{ flex: 1, borderRadius: dimensions.width * 0.04 }}
+                                                    colors={['#FA199A', '#1A0C34']}
+                                                    start={{ x: 0, y: 0.5 }}
+                                                    end={{ x: 1, y: 0.5 }}
+                                                />
+                                            </View>
+                                        </View>
+
+                                        <GradientText
+                                            text='0:30'
+                                            style={{
+                                                paddingHorizontal: dimensions.width * 0.05,
+                                                textAlign: 'center',
+                                                fontSize: dimensions.width * 0.06,
+                                                maxWidth: dimensions.width * 0.89,
+                                                alignSelf: 'center',
+                                                fontFamily: fontNunitoBlack,
+                                                textTransform: 'uppercase',
+                                            }}
+                                            gradientColors={['#EF1895', '#1D0C35']}
+                                        />
+                                    </View>
+
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontFamily: fontNunitoRegular,
+                                            fontWeight: 400,
+                                            fontSize: dimensions.width * 0.035,
+                                            color: '#7C7C7C',
+                                            marginTop: dimensions.height * 0.03,
+                                        }}>
+                                        Question and answer time: 0:30
+                                    </Text>
+
+                                </View>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+
+                                    }}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        width: dimensions.width * 0.8,
+                                        height: dimensions.height * 0.09,
+                                        borderRadius: dimensions.width * 0.1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: dimensions.height * 0.03,
+                                        alignSelf: 'center'
+                                    }}>
+                                    <GradientText
+                                        text='Play next'
+                                        style={{
+                                            paddingHorizontal: dimensions.width * 0.05,
+                                            textAlign: 'center',
+                                            fontSize: dimensions.width * 0.06,
+                                            maxWidth: dimensions.width * 0.89,
+                                            alignSelf: 'center',
+                                            fontFamily: fontNunitoBlack,
+                                            textTransform: 'uppercase',
+                                        }}
+                                        gradientColors={['#EF1895', '#1D0C35']}
+                                    />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+
+                                    }}
+                                    style={{
+                                        backgroundColor: '#FF0000',
+                                        width: dimensions.width * 0.8,
+                                        height: dimensions.height * 0.09,
+                                        borderRadius: dimensions.width * 0.1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: dimensions.height * 0.015,
+                                        alignSelf: 'center'
+                                    }}>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontSize: dimensions.width * 0.055,
+                                            maxWidth: dimensions.width * 0.89,
+                                            alignSelf: 'center',
+                                            fontFamily: fontNunitoBlack,
+                                            textTransform: 'uppercase',
+                                            color: 'white',
+                                        }}
+                                    >
+                                        No answer given
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setSelectedPingoScreen('Home');
+                                    }}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        width: dimensions.height * 0.1,
+                                        height: dimensions.height * 0.1,
+                                        borderRadius: dimensions.width * 0.5,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: dimensions.height * 0.05,
+                                        alignSelf: 'center'
+                                    }}>
+                                        <Image 
+                                            source={require('../assets/icons/homeImageIcon.png')}
+                                            style={{
+                                                width: dimensions.height * 0.04,
+                                                height: dimensions.height * 0.04,
+                                            }}
+                                            resizeMode='contain'
+                                        />
+                                    </TouchableOpacity>
+                            </>
+                        )
+                    )
                 )}
 
 
