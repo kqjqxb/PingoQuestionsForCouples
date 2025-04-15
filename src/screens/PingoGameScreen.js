@@ -9,10 +9,42 @@ import {
     TouchableOpacity,
     Image,
     Share,
+    Modal,
+    TouchableWithoutFeedback,
+    Keyboard,
+    Alert,
 } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../components/GradientText';
+import { TextInput } from 'react-native-gesture-handler';
+
+const balls = [
+    {
+        id: 1,
+        image: require('../assets/images/ballsImages/ball1.png'),
+    },
+    {
+        id: 2,
+        image: require('../assets/images/ballsImages/ball2.png'),
+    },
+    {
+        id: 3,
+        image: require('../assets/images/ballsImages/ball3.png'),
+    },
+    {
+        id: 4,
+        image: require('../assets/images/ballsImages/ball4.png'),
+    },
+    {
+        id: 5,
+        image: require('../assets/images/ballsImages/ball5.png'),
+    },
+    {
+        id: 6,
+        image: require('../assets/images/ballsImages/ball6.png'),
+    },
+]
 
 
 const fontNunitoBlack = 'Nunito-Black';
@@ -22,326 +54,481 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const styles = createPingoSettingsStyles(dimensions);
 
-    const [sounds, setSounds] = useState(false);
-    const [vibration, setVibration] = useState(false);
-    const [textWidths, setTextWidths] = useState({});
-    const [selectedPingoCategory, setSelectedPingoCategory] = useState('Settings');
+    const [isPingoGameStarted, setPingoGameStarted] = useState(false);
+    const [selectedPingoGameMode, setSelectedPingoGameMode] = useState('');
+    const [player1Name, setPlayer1Name] = useState('');
+    const [player2Name, setPlayer2Name] = useState('');
 
-    const onTextLayout = (item, event) => {
-        const { width } = event.nativeEvent.layout;
-        setTextWidths(prev => ({ ...prev, [item]: width }));
-    };
+    const [chooseBallModalVisible, setChooseBallModalVisible] = useState(false);
 
-    const saveSetting = async (key, value) => {
-        try {
-            await AsyncStorage.setItem(key, JSON.stringify(value));
-        } catch (error) {
-            console.error("Error saving setting:", error);
-        }
-    };
+    const [selected1Ball, setSelected1Ball] = useState(balls[0]);
+    const [selected2Ball, setSelected2Ball] = useState(balls[1]);
 
-    useEffect(() => {
-        const loadSettings = async () => {
-            try {
-                const bgMusicValue = await AsyncStorage.getItem('backgroundMusic');
-                if (bgMusicValue !== null) setBackgroundMusic(JSON.parse(bgMusicValue));
+    const [selectBallForPlayer, setSelectBallForPlayer] = useState(1);
 
-                const soundsValue = await AsyncStorage.getItem('sounds');
-                if (soundsValue !== null) setSounds(JSON.parse(soundsValue));
 
-                const notificationsValue = await AsyncStorage.getItem('vibration');
-                if (notificationsValue !== null) setVibration(JSON.parse(notificationsValue));
-            } catch (error) {
-                console.error("Error loading settings:", error);
-            }
-        };
-        loadSettings();
-    }, []);
-
-    const sharePingoApp = async () => {
-        try {
-            await Share.share({
-                message: `Join Pingo Questions for Couples! A fun game to get to know each other better. Download it now!`,
-            });
-        } catch (error) {
-        }
-    };
 
     return (
-        <SafeAreaView style={{ width: dimensions.width }}>
-            <TouchableOpacity
-                onPress={() => {
-                    setSelectedPingoScreen('Home');
-                }}
-                style={{
-                    borderRadius: dimensions.width * 0.5,
-                    width: dimensions.width * 0.18,
-                    height: dimensions.width * 0.18,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    backgroundColor: 'white'
-                }}
-            >
-                <ChevronLeftIcon size={dimensions.width * 0.12} color='#FA199A' style={{ marginRight: dimensions.width * 0.01 }} />
-            </TouchableOpacity>
-
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: -dimensions.height * 0.01,
-            }}>
-                {['Settings', 'About'].map((item, index) => (
-                    <TouchableOpacity
-                        activeOpacity={0.8}
-                        key={index}
-                        onPress={() => {
-                            setSelectedPingoCategory(item);
-                        }}
-                        style={{
-                            width: dimensions.width * 0.4,
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                            marginTop: dimensions.height * 0.05,
-                            borderBottomColor: 'white',
-                            marginHorizontal: dimensions.width * 0.05,
-                        }}>
-                        <Text
-                            onLayout={(event) => onTextLayout(item, event)}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <SafeAreaView style={{ width: dimensions.width }}>
+                {!isPingoGameStarted && (
+                    <View style={{
+                        width: dimensions.width * 0.9,
+                        alignItems: 'center',
+                        justifyContent: selectedPingoGameMode === '' ? 'center' : 'flex-start',
+                        paddingHorizontal: dimensions.width * 0.05,
+                        flexDirection: 'row',
+                    }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (isPingoGameStarted) {
+                                    setPingoGameStarted(false);
+                                } else setSelectedPingoScreen('Home');
+                            }}
                             style={{
-                                textAlign: 'center',
-                                fontFamily: fontNunitoBlack,
-                                fontSize: dimensions.width * 0.06,
-                                color: 'white',
-                                textTransform: 'uppercase',
-                            }}>
-                            {item}
-                        </Text>
-
-                        <View style={{
-                            backgroundColor: selectedPingoCategory === item ? 'white' : 'transparent',
-                            borderRadius: textWidths[item] ? textWidths[item] / 2 : 0,
-                            width: textWidths[item] || 0,
-                            height: dimensions.height * 0.008,
-                            marginTop: dimensions.height * 0.005,
-                        }} />
-                    </TouchableOpacity>
-                ))}
-            </View>
-
-            {selectedPingoCategory === 'Settings' ? (
-                <>
-                    {[
-                        { label: 'Sound', key: 'sounds', value: sounds, setter: setSounds },
-                        { label: 'Vibration', key: 'vibration', value: vibration, setter: setVibration },
-                    ].map((item, index) => (
-                        <View key={index} style={{
-                            width: dimensions.width * 0.92,
-                            alignSelf: 'center',
-                            alignItems: 'center',
-                            marginTop: dimensions.height * 0.05,
-                        }}>
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    textTransform: 'uppercase',
-                                    fontFamily: fontNunitoBlack,
-                                    fontSize: dimensions.width * 0.06,
-                                    color: '#fff',
-                                }}>
-                                {item.label}
-                            </Text>
-
-                            <View style={{
-                                flexDirection: 'row',
+                                borderRadius: dimensions.width * 0.5,
+                                width: dimensions.width * 0.18,
+                                height: dimensions.width * 0.18,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginTop: dimensions.height * 0.02,
+                                alignSelf: 'center',
+                                backgroundColor: 'white',
+                                marginLeft: selectedPingoGameMode === '' ? dimensions.width * 0.08 : 0,
+                            }}
+                        >
+                            <ChevronLeftIcon size={dimensions.width * 0.12} color='#FA199A' style={{ marginRight: dimensions.width * 0.01 }} />
+                        </TouchableOpacity>
+
+                        {selectedPingoGameMode !== '' && (
+                            <View style={{
+                                backgroundColor: 'white',
+                                width: dimensions.width * 0.5,
+                                marginLeft: dimensions.width * 0.05,
+                                height: dimensions.height * 0.05,
+                                borderRadius: dimensions.width * 0.1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
                             }}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        const newValue = !item.value;
-                                        item.setter(newValue);
-                                        saveSetting(item.key, newValue);
-                                    }}
+                                <GradientText
+                                    text={selectedPingoGameMode}
                                     style={{
-                                        width: dimensions.width * 0.3,
-                                        height: dimensions.height * 0.06,
-                                        justifyContent: 'center',
-                                        alignItems: item.value ? 'flex-end' : 'flex-start',
-                                        backgroundColor: 'white',
-                                        borderRadius: dimensions.width * 0.1,
-                                        paddingHorizontal: dimensions.width * 0.02,
-                                    }}>
-                                    <View style={{
-                                        width: dimensions.width * 0.1,
-                                        height: dimensions.width * 0.1,
-                                        borderRadius: dimensions.width * 0.5,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                    }}>
-                                        <LinearGradient
-                                            style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: dimensions.width * 0.5 }}
-                                            colors={['#1A0C34', '#FA199A']}
-                                            start={{ x: 0.5, y: 0 }}
-                                            end={{ x: 0.5, y: 1 }}
-                                        />
 
-                                    </View>
-                                </TouchableOpacity>
+                                        textAlign: 'center',
+                                        fontSize: dimensions.width * 0.035,
+                                        maxWidth: dimensions.width * 0.89,
+                                        alignSelf: 'center',
+                                        fontFamily: fontNunitoBlack,
+                                        textTransform: 'uppercase',
+                                    }}
+                                    gradientColors={['#EF1895', '#1D0C35']}
+                                />
+                            </View>
+                        )}
 
+                    </View>
+                )}
+
+                {!isPingoGameStarted ? (
+                    <>
+                        {selectedPingoGameMode === '' ? (
+                            <>
                                 <Text
                                     style={{
                                         textAlign: 'center',
                                         fontFamily: fontNunitoBlack,
-                                        fontSize: dimensions.width * 0.06,
+                                        fontSize: dimensions.width * 0.045,
                                         color: 'white',
                                         textTransform: 'uppercase',
-                                        marginLeft: dimensions.width * 0.03,
+                                        paddingHorizontal: dimensions.width * 0.07,
+                                        marginTop: dimensions.height * 0.02,
                                     }}>
-                                    {item.value ? 'On' : 'Off'}
+                                    Ready to play?
+                                    {'\n'}Choose a mode and start having fun!
                                 </Text>
-                            </View>
-                        </View>
-                    ))}
+                                <View style={{ marginTop: dimensions.height * 0.05 }} />
+                                {['For two Players', 'Online Game'].map((mode) => (
+                                    <TouchableOpacity
+                                        key={mode}
+                                        onPress={() => {
+                                            setSelectedPingoGameMode(mode);
+                                        }}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            width: dimensions.width * 0.7,
+                                            height: dimensions.height * 0.08,
+                                            borderRadius: dimensions.width * 0.1,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            marginTop: dimensions.height * 0.01,
+                                            alignSelf: 'center',
+                                        }}>
+                                        <GradientText
+                                            text={mode}
+                                            style={{
+                                                paddingHorizontal: dimensions.width * 0.05,
+                                                textAlign: 'center',
+                                                fontSize: dimensions.width * 0.05,
+                                                maxWidth: dimensions.width * 0.89,
+                                                alignSelf: 'center',
+                                                fontFamily: fontNunitoBlack,
+                                                textTransform: 'uppercase',
+                                            }}
+                                            gradientColors={['#EF1895', '#1D0C35']}
+                                        />
+                                    </TouchableOpacity>
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    width: dimensions.width * 0.9,
+                                    alignSelf: 'center',
+                                    marginTop: dimensions.height * 0.1,
+                                }}>
+                                    <View>
+                                        <Text
+                                            style={{
+                                                textAlign: 'left',
+                                                fontFamily: fontNunitoBlack,
+                                                fontSize: dimensions.width * 0.04,
+                                                color: 'white',
+                                                textTransform: 'uppercase',
+                                                marginTop: dimensions.height * 0.025,
+                                            }}>
+                                            Enter name 1
+                                        </Text>
 
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            textTransform: 'uppercase',
-                            fontFamily: fontNunitoBlack,
-                            fontSize: dimensions.width * 0.05,
-                            color: '#fff',
-                            marginTop: dimensions.height * 0.05,
-                        }}>
-                        Delete photo from app
-                    </Text>
+                                        <TextInput
+                                            placeholder='NAME P1'
+                                            placeholderTextColor='white'
+                                            maxLength={15}
+                                            placeholderStyle={{
+                                                color: 'white',
+                                                fontFamily: fontNunitoBlack,
+                                                fontSize: dimensions.width * 0.04,
+                                            }}
+                                            value={player1Name}
+                                            onChangeText={(text) => setPlayer1Name(text)}
+                                            style={styles.textInputStyles}
+                                        />
+                                    </View>
 
-                    <TouchableOpacity style={{
-                        width: dimensions.width * 0.45,
-                        height: dimensions.height * 0.08,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#FF9A9A',
-                        borderRadius: dimensions.width * 0.1,
-                        marginTop: dimensions.height * 0.02,
-                        alignSelf: 'center',
-                    }}
-                        onPress={() => {
+                                    <View>
+                                        <Text style={styles.chooseBallTextStyles}>
+                                            Choose ball
+                                        </Text>
 
-                        }}>
-                        <Text
-                            style={{
-                                textAlign: 'center',
-                                textTransform: 'uppercase',
-                                fontFamily: fontNunitoBlack,
-                                fontSize: dimensions.width * 0.05,
-                                color: '#960000',
-                            }}>
-                            Delete
-                        </Text>
-                    </TouchableOpacity>
-                </>
-            ) : (
-                <>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginTop: dimensions.height * 0.03,
-                        paddingHorizontal: dimensions.width * 0.05,
-                    }}>
-                        <Image
-                            source={require('../assets/images/homeImage.png')}
-                            style={{
-                                width: dimensions.width * 0.45,
-                                height: dimensions.width * 0.45,
-                            }}
-                            resizeMode='contain'
-                        />
-                        <Text
-                            style={{
-                                textAlign: 'left',
-                                textTransform: 'uppercase',
-                                fontFamily: fontNunitoBlack,
-                                fontSize: dimensions.width * 0.025,
-                                maxWidth: dimensions.width * 0.42,
-                                color: 'white',
-                            }}>
-                            Pingo: Questions for Couples is a fun and dynamic game created for couples in love who want to get to know each other better. The game combines simplicity and interactivity, allowing you to ask questions and receive answers through an exciting ball game mechanism.
-                        </Text>
-                    </View>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setSelectBallForPlayer(1);
+                                                setChooseBallModalVisible(true);
+                                            }}
+                                            style={styles.touchableBallStyles}>
+                                            <Image
+                                                source={selected1Ball.image}
+                                                style={{
+                                                    width: dimensions.height * 0.048,
+                                                    height: dimensions.height * 0.048,
 
-                    <Text
-                        style={{
-                            textAlign: 'left',
-                            textTransform: 'uppercase',
-                            fontFamily: fontNunitoBlack,
-                            fontSize: dimensions.width * 0.025,
+                                                }}
+                                            />
 
-                            color: 'white',
-                            marginTop: dimensions.height * 0.03,
-                            paddingHorizontal: dimensions.width * 0.05,
-                        }}>
-                        Features:{'\n'}
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
 
-                        {'\n'}Two-player mode: Play with a partner, throw balls and answer each other's questions.{'\n'}
+                                <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    width: dimensions.width * 0.9,
+                                    alignSelf: 'center',
+                                    marginTop: dimensions.height * 0.02,
+                                }}>
+                                    <View>
+                                        <Text
+                                            style={{
+                                                textAlign: 'left',
+                                                fontFamily: fontNunitoBlack,
+                                                fontSize: dimensions.width * 0.04,
+                                                color: 'white',
+                                                textTransform: 'uppercase',
+                                                marginTop: dimensions.height * 0.025,
+                                            }}>
+                                            Enter name 1
+                                        </Text>
 
-                        {'\n'}Online game: Play with a partner, answering questions that we have come up with for you, if you lack imagination or the questions are poorly formulated.{'\n'}
+                                        <TextInput
+                                            placeholder='NAME P2'
+                                            placeholderTextColor='white'
+                                            maxLength={15}
+                                            placeholderStyle={{
+                                                color: 'white',
+                                                fontFamily: fontNunitoBlack,
+                                                fontSize: dimensions.width * 0.04,
+                                            }}
+                                            value={player2Name}
+                                            onChangeText={(text) => setPlayer2Name(text)}
+                                            style={styles.textInputStyles}
+                                        />
+                                    </View>
 
-                        {'\n'}Sound and vibration: Adjust the sound of the ball falling and vibration during the game.{'\n'}
+                                    <View>
+                                        <Text style={styles.chooseBallTextStyles}>
+                                            Choose ball
+                                        </Text>
 
-                        {'\n'}Game moments: After each game, you can take a photo of the moment and save it for viewing.{'\n'}
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setSelectBallForPlayer(2);
+                                                setChooseBallModalVisible(true);
+                                            }}
+                                            style={styles.touchableBallStyles}>
+                                            <Image
+                                                source={selected2Ball.image}
+                                                style={{
+                                                    width: dimensions.height * 0.048,
+                                                    height: dimensions.height * 0.048,
 
-                        {'\n'}Remember, this is not only a way to spend time together, but also an opportunity to learn more about your partner in an entertaining and relaxed way.
-                    </Text>
+                                                }}
+                                            />
 
-                    <TouchableOpacity
-                        onPress={sharePingoApp}
-                        style={{
-                            width: dimensions.width * 0.4,
-                            height: dimensions.height * 0.08,
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+
+                                <TouchableOpacity
+                                    disabled={
+                                        player1Name.replace(/\s/g, '').length === 0 ||
+                                        player2Name.replace(/\s/g, '').length === 0
+                                    }
+                                    onPress={() => {
+                                        setPingoGameStarted(true);
+                                    }}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        width: dimensions.width * 0.7,
+                                        height: dimensions.height * 0.08,
+                                        borderRadius: dimensions.width * 0.1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignSelf: 'center',
+                                        opacity:
+                                            player1Name.replace(/\s/g, '').length === 0 ||
+                                                player2Name.replace(/\s/g, '').length === 0 ? 0.5 : 1,
+
+                                        marginTop: dimensions.height * 0.15,
+                                    }}>
+                                    <GradientText
+                                        text='Start Play'
+                                        style={styles.gradientTextStyles}
+                                        gradientColors={['#EF1895', '#1D0C35']}
+                                    />
+                                </TouchableOpacity>
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <View style={{
+                            backgroundColor: 'white',
+                            width: dimensions.width * 0.8,
+                            height: dimensions.height * 0.09,
+                            borderRadius: dimensions.width * 0.1,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor: 'white',
-                            borderRadius: dimensions.width * 0.1,
-                            marginTop: dimensions.height * 0.05,
-                            alignSelf: 'flex-start',
-                            marginLeft: dimensions.width * 0.05,
-                            flexDirection: 'row',
+                            alignSelf: 'center',
                         }}>
-                        <GradientText
-                            text='Share'
-                            style={{
-                                textAlign: 'center',
-                                fontSize: dimensions.width * 0.05,
-                                maxWidth: dimensions.width * 0.89,
-                                alignSelf: 'center',
-                                fontFamily: fontNunitoBlack,
-                                textTransform: 'uppercase',
-                            }}
-                            gradientColors={['#EF1895', '#1D0C35']}
-                        />
+                            <GradientText
+                                text='Cut the threads'
+                                style={{
 
-                        <Image
-                            source={require('../assets/icons/sharePingoIcon.png')}
-                            style={{
-                                width: dimensions.width * 0.05,
-                                height: dimensions.width * 0.05,
-                                marginLeft: dimensions.width * 0.025,
-                            }}
-                            resizeMode='contain'
-                        />
-                    </TouchableOpacity>
-                </>
-            )}
+                                    textAlign: 'center',
+                                    fontSize: dimensions.width * 0.05,
+                                    maxWidth: dimensions.width * 0.89,
+                                    alignSelf: 'center',
+                                    fontFamily: fontNunitoBlack,
+                                    textTransform: 'uppercase',
+                                }}
+                                gradientColors={['#EF1895', '#1D0C35']}
+                            />
+                        </View>
+                    </>
+                )}
 
-        </SafeAreaView>
+
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={chooseBallModalVisible}
+                    onRequestClose={() => {
+                        setChooseBallModalVisible(!chooseBallModalVisible);
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <LinearGradient
+                            style={{ flex: 1, }}
+                            colors={['#FA199A', '#1A0C34']}
+                            start={{ x: 0.5, y: 0 }}
+                            end={{ x: 0.5, y: 1 }}
+                        >
+                            <SafeAreaView style={{
+                                flex: 1,
+                            }}>
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    width: dimensions.width * 0.5,
+                                    height: dimensions.height * 0.05,
+                                    borderRadius: dimensions.width * 0.1,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    alignSelf: 'center',
+                                }}>
+                                    <GradientText
+                                        text='Choose ball'
+                                        style={{
+                                            textAlign: 'center',
+                                            fontSize: dimensions.width * 0.035,
+                                            maxWidth: dimensions.width * 0.89,
+                                            fontFamily: fontNunitoBlack,
+                                            textTransform: 'uppercase',
+                                        }}
+                                        gradientColors={['#EF1895', '#1D0C35']}
+                                    />
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    width: dimensions.width * 0.9,
+                                    alignSelf: 'center',
+                                    marginTop: dimensions.height * 0.05,
+                                    flexWrap: 'wrap',
+                                }}>
+                                    {balls.map((ball) => (
+                                        <TouchableOpacity
+                                            key={ball.id}
+                                            onPress={() => {
+                                                if (selectBallForPlayer === 1) {
+                                                    if (selected2Ball && selected2Ball.id === ball.id) {
+                                                        Alert.alert('Error', 'You cannot select the same ball for both players.');
+                                                        return;
+                                                    }
+                                                    setSelected1Ball(ball);
+                                                } else {
+                                                    if (selected1Ball && selected1Ball.id === ball.id) {
+                                                        Alert.alert('Error', 'You cannot select the same ball for both players.');
+                                                        return;
+                                                    }
+                                                    setSelected2Ball(ball);
+                                                }
+                                            }}
+
+                                            style={{
+                                                backgroundColor: (selectBallForPlayer === 1 && selected1Ball === ball) || (selectBallForPlayer === 2 && selected2Ball === ball) ? 'white' : 'transparent',
+                                                width: dimensions.height * 0.13,
+                                                height: dimensions.height * 0.13,
+                                                borderRadius: dimensions.width * 0.5,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                marginTop: dimensions.height * 0.01,
+                                            }}
+                                        >
+                                            <Image
+                                                source={ball.image}
+                                                style={{
+                                                    width: dimensions.height * 0.08,
+                                                    height: dimensions.height * 0.08,
+                                                }}
+                                            />
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setChooseBallModalVisible(false);
+                                    }}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        width: dimensions.width * 0.7,
+                                        height: dimensions.height * 0.08,
+                                        borderRadius: dimensions.width * 0.1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignSelf: 'center',
+
+                                        position: 'absolute',
+                                        bottom: dimensions.height * 0.1,
+                                        marginTop: dimensions.height * 0.15,
+                                    }}>
+                                    <GradientText
+                                        text='back'
+                                        style={styles.gradientTextStyles}
+                                        gradientColors={['#EF1895', '#1D0C35']}
+                                    />
+                                </TouchableOpacity>
+                            </SafeAreaView>
+                        </LinearGradient>
+                    </View>
+                </Modal>
+
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
 };
 
 const createPingoSettingsStyles = (dimensions) => StyleSheet.create({
+    gradientTextStyles: {
+        paddingHorizontal: dimensions.width * 0.05,
+        textAlign: 'center',
+        fontSize: dimensions.width * 0.05,
+        maxWidth: dimensions.width * 0.89,
+        alignSelf: 'center',
+        fontFamily: fontNunitoBlack,
+        textTransform: 'uppercase',
+    },
+    touchableBallStyles: {
+        height: dimensions.height * 0.09,
+        width: dimensions.height * 0.09,
+        backgroundColor: 'white',
+        borderRadius: dimensions.width * 0.5,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    chooseBallTextStyles: {
+        textAlign: 'left',
+        fontFamily: fontNunitoBlack,
+        fontSize: dimensions.width * 0.04,
+        color: 'white',
+        textTransform: 'uppercase',
+        marginTop: dimensions.height * 0.025,
+        flex: 1
+    },
+    textInputStyles: {
+        backgroundColor: 'transparent',
+        borderColor: 'white',
+        borderWidth: dimensions.width * 0.003,
+
+        width: dimensions.width * 0.6,
+        height: dimensions.height * 0.1,
+        borderRadius: dimensions.width * 0.3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: dimensions.height * 0.01,
+        paddingHorizontal: dimensions.width * 0.05,
+        fontFamily: fontNunitoBlack,
+        fontSize: dimensions.width * 0.045,
+        textTransform: 'uppercase',
+        color: 'white',
+    }
 });
 
 export default PingoGameScreen;
