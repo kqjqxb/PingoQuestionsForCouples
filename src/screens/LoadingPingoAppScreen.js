@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { Dimensions, Image, View } from 'react-native';
+import { View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { useDispatch } from 'react-redux';
 import React, { useContext, useEffect, useState } from 'react';

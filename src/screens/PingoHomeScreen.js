@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
-  StyleSheet,
   TouchableOpacity,
   Image,
   Keyboard,
@@ -14,7 +13,6 @@ import GradientText from '../components/GradientText';
 
 import LinearGradient from 'react-native-linear-gradient';
 import PingoSettingsScreen from './PingoSettingsScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import PingoHowToPlayScreen from './PingoHowToPlayScreen';
 import PingoYourMomentsScreen from './PingoYourMomentsScreen';
 import PingoGameScreen from './PingoGameScreen';
@@ -48,8 +46,6 @@ const fontNunitoRegular = 'Nunito-Regular';
 const PingoHomeScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedPingoScreen, setSelectedPingoScreen] = useState('Home');
-
-  const [isSoundEnabled, setSoundEnabled] = useState(true);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

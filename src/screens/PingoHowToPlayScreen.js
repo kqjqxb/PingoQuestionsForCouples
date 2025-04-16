@@ -1,17 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
     Dimensions,
     SafeAreaView,
-    StyleSheet,
     TouchableOpacity,
     Image,
-    Share,
 } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
-import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../components/GradientText';
 
 const howToPlayText = `Choose a game mode: 
@@ -24,10 +20,9 @@ If you don't answer, make a wish!
 Save your game moments and watch them later.`
 
 const fontNunitoBlack = 'Nunito-Black';
-const fontNunitoRegular = 'Nunito-Regular';
 const fontNunitoExtraBold = 'Nunito-ExtraBold';
 
-const PingoHowToPlayScreen = ({ setSelectedPingoScreen, selectedPingoScreen, backgroundMusic, setBackgroundMusic }) => {
+const PingoHowToPlayScreen = ({ setSelectedPingoScreen, }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
     return (

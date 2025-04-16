@@ -11,11 +11,11 @@ const fontNunitoRegular = 'Nunito-Regular';
 
 const PingoOnboardScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const styles = PingoGradientStyles(dimensions);
-  const [currentCallEnSlideToSportIndex, setCurrentCallEnSlideToSportIndex] = useState(0);
-  const callEnSlidesToSportRef = useRef(null);
-  const callEnScrollToSportX = useRef(new Animated.Value(0)).current;
+  const [currentPingoSlideIndex, setCurrentPingoSlideIndex] = useState(0);
+  const pingoRef = useRef(null);
   const navigation = useNavigation();
+  const pingoScrollX = useRef(new Animated.Value(0)).current;
+  const styles = PingoGradientStyles(dimensions);
 
   useEffect(() => {
     const onChange = ({ window }) => {
@@ -29,21 +29,21 @@ const PingoOnboardScreen = () => {
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems && viewableItems.length > 0) {
-      setCurrentCallEnSlideToSportIndex(viewableItems[0].index);
+      setCurrentPingoSlideIndex(viewableItems[0].index);
     }
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
-  const scrollToTheNextCallEnSportSlide = () => {
-    if (currentCallEnSlideToSportIndex < onboardingPingoData.length - 1) {
-      callEnSlidesToSportRef.current.scrollToIndex({ index: currentCallEnSlideToSportIndex + 1 });
+  const scrollToTheNextPingoSlideElement = () => {
+    if (currentPingoSlideIndex < onboardingPingoData.length - 1) {
+      pingoRef.current.scrollToIndex({ index: currentPingoSlideIndex + 1 });
     } else {
       navigation.replace('Home');
     }
   };
 
-  const callEnRenderItem = ({ item }) => (
+  const renderPingoItem = ({ item }) => (
     <View style={{
       alignItems: 'center',
 
@@ -59,43 +59,43 @@ const PingoOnboardScreen = () => {
         width: dimensions.width,
       }}>
         <Image
-          source={item.callEnImage}
+          source={item.pingoImage}
           style={{
-            borderBottomLeftRadius: dimensions.width * 0.05,
-            width: dimensions.width * 0.9,
-            borderBottomRightRadius: dimensions.width * 0.05,
             alignSelf: 'center',
+            borderBottomLeftRadius: dimensions.width * 0.05,
             height: dimensions.height * 0.4,
+            borderBottomRightRadius: dimensions.width * 0.05,
+            width: dimensions.width * 0.9,
           }}
           resizeMode="stretch"
         />
         <Text
           style={{
-            paddingHorizontal: dimensions.width * 0.05,
+            marginTop: dimensions.height * 0.02,
             textAlign: 'center',
+            textTransform: 'uppercase',
             color: 'white',
             fontSize: dimensions.width * 0.06,
             maxWidth: dimensions.width * 0.89,
             alignSelf: 'center',
             fontFamily: fontNunitoBlack,
-            marginTop: dimensions.height * 0.02,
-            textTransform: 'uppercase',
+            paddingHorizontal: dimensions.width * 0.05,
           }}>
           {item.title}
         </Text>
         <Text
           style={{
-            color: '#fff',
+            fontSize: dimensions.width * 0.037,
             marginTop: dimensions.height * 0.02,
+            maxWidth: dimensions.width * 0.8,
             fontWeight: 400,
             textAlign: 'center',
             paddingHorizontal: dimensions.width * 0.05,
             fontFamily: fontNunitoRegular,
             alignSelf: 'center',
-            fontSize: dimensions.width * 0.037,
-            maxWidth: dimensions.width * 0.8,
+            color: '#fff',
           }}>
-          {item.description}
+          {item.pingoBottomOnbText}
         </Text>
       </View>
     </View>
@@ -119,35 +119,35 @@ const PingoOnboardScreen = () => {
       <View style={{ display: 'flex' }}>
         <FlatList
           bounces={false}
-          horizontal
+          viewabilityConfig={viewConfig}
+          data={onboardingPingoData}
+          onViewableItemsChanged={viewableItemsChanged}
           showsHorizontalScrollIndicator={false}
           pagingEnabled
-          renderItem={callEnRenderItem}
-          data={onboardingPingoData}
-          viewabilityConfig={viewConfig}
+          renderItem={renderPingoItem}
+          horizontal
           keyExtractor={(item) => item.id.toString()}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: callEnScrollToSportX } } }], {
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: pingoScrollX } } }], {
             useNativeDriver: false,
           })}
-          ref={callEnSlidesToSportRef}
           scrollEventThrottle={32}
-          onViewableItemsChanged={viewableItemsChanged}
+          ref={pingoRef}
         />
       </View>
 
       <TouchableOpacity
         onPress={() => {
-          scrollToTheNextCallEnSportSlide();
+          scrollToTheNextPingoSlideElement();
         }}
         style={{
-          borderRadius: dimensions.width * 0.5,
+          alignSelf: 'center',
           width: dimensions.width * 0.2,
+          backgroundColor: 'white',
           height: dimensions.width * 0.2,
           alignItems: 'center',
           justifyContent: 'center',
           bottom: dimensions.height * 0.13,
-          alignSelf: 'center',
-          backgroundColor: 'white'
+          borderRadius: dimensions.width * 0.5,
         }}
       >
         <ChevronRightIcon size={dimensions.width * 0.12} color='#FA199A' style={{marginLeft: dimensions.width * 0.01}}/>
@@ -157,22 +157,6 @@ const PingoOnboardScreen = () => {
 };
 
 const PingoGradientStyles = (dimensions) => StyleSheet.create({
-  deepOrangeGradient: {
-    left: 0,
-    right: 0,
-    top: 0,
-    position: 'absolute',
-    zIndex: 0,
-    shadowOpacity: 0.4,
-    shadowColor: 'black',
-    shadowRadius: dimensions.width * 0.03,
-    elevation: 7,
-    bottom: 0,
-    shadowOffset: {
-      width: dimensions.width * 0.002,
-      height: dimensions.height * 0.01
-    },
-  },
 });
 
 export default PingoOnboardScreen;

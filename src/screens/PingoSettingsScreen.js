@@ -5,7 +5,6 @@ import {
     Text,
     Dimensions,
     SafeAreaView,
-    StyleSheet,
     TouchableOpacity,
     Image,
     Share,
@@ -40,7 +39,7 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
     };
 
     useEffect(() => {
-        const loadSettings = async () => {
+        const loadPingoSettings = async () => {
             try {
                 const bgMusicValue = await AsyncStorage.getItem('backgroundMusic');
                 if (bgMusicValue !== null) setBackgroundMusic(JSON.parse(bgMusicValue));
@@ -54,7 +53,7 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
                 console.error("Error loading settings:", error);
             }
         };
-        loadSettings();
+        loadPingoSettings();
     }, []);
 
     const sharePingoApp = async () => {
@@ -74,12 +73,12 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
                 }}
                 style={{
                     borderRadius: dimensions.width * 0.5,
-                    width: dimensions.width * 0.18,
+                    alignSelf: 'center',
+                    backgroundColor: 'white',
                     height: dimensions.width * 0.18,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    alignSelf: 'center',
-                    backgroundColor: 'white'
+                    width: dimensions.width * 0.18,
                 }}
             >
                 <ChevronLeftIcon size={dimensions.width * 0.12} color='#FA199A' style={{ marginRight: dimensions.width * 0.01 }} />

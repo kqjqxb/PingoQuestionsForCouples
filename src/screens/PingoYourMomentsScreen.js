@@ -258,12 +258,12 @@ const PingoYourMomentsScreen = ({ setSelectedPingoScreen}) => {
                                 text='Save'
                                 style={{
                                     paddingHorizontal: dimensions.width * 0.05,
-                                    textAlign: 'center',
+                                    alignSelf: 'center',
                                     fontSize: dimensions.width * 0.05,
                                     maxWidth: dimensions.width * 0.89,
-                                    alignSelf: 'center',
-                                    fontFamily: fontNunitoBlack,
                                     textTransform: 'uppercase',
+                                    fontFamily: fontNunitoBlack,
+                                    textAlign: 'center',
                                 }}
                                 gradientColors={['#EF1895', '#1D0C35']}
                             />
@@ -277,12 +277,12 @@ const PingoYourMomentsScreen = ({ setSelectedPingoScreen}) => {
                 top: dimensions.height / 2 - 40,
                 left: dimensions.width * 0.1,
                 right: dimensions.width * 0.1,
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                opacity: successOpacity,
+                justifyContent: 'center',
                 padding: 15,
                 borderRadius: 10,
-                opacity: successOpacity,
                 alignItems: 'center',
-                justifyContent: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
             }}>
                 <Text style={{
                     color: 'white',
