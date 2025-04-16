@@ -1,8 +1,8 @@
 import React from 'react';
-import DeepDiveStack from './StackNavigator';
+import PingoCouplesStack from './StackNavigator';
 
 function App() {
-  return <DeepDiveStack />;
+  return <PingoCouplesStack />;
 }
 
 export default App;

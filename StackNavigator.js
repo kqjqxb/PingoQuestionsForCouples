@@ -12,7 +12,7 @@ import LoadingPingoAppScreen from './src/screens/LoadingPingoAppScreen';
 
 const Stack = createNativeStackNavigator();
 
-const DeepDiveStack = () => {
+const PingoCouplesStack = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
@@ -43,4 +43,4 @@ const AppNavigator = () => {
 };
 
 
-export default DeepDiveStack;
+export default PingoCouplesStack;

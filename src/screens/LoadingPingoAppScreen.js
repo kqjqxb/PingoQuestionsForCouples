@@ -35,7 +35,7 @@ const LoadingPingoAppScreen = () => {
           await AsyncStorage.setItem('isPingoOnboardingVisibleYet', 'true');
         }
       } catch (error) {
-        console.error('Error loading DeepDive user', error);
+        console.error('Error loading Pingo user', error);
       }
       setLoadingPingo(true);
     };
