@@ -50,7 +50,6 @@ const PingoHomeScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={{
-        backgroundColor: '#160002',
         width: '100%',
         height: dimensions.height,
         flex: 1,
