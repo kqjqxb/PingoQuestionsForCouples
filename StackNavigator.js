@@ -33,10 +33,10 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName={'LoadingDeepDivingScreen'}>
+        <Stack.Navigator initialRouteName={'LoadingPingoCoupleScreen'}>
           <Stack.Screen name="Home" component={PingoHomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="PingoOnboardScreen" component={PingoOnboardScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="LoadingDeepDivingScreen" component={LoadingPingoAppScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="LoadingPingoCoupleScreen" component={LoadingPingoAppScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     </NavigationContainer>
   );

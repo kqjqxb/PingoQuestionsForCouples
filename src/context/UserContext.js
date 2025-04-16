@@ -7,17 +7,17 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loadDeepDiveUser = async () => {
+    const loadPingoCoupleUser = async () => {
       try {
-        const storedDeepDiveUser = await AsyncStorage.getItem('currentUser');
-        if (storedDeepDiveUser) {
-          setUser(JSON.parse(storedDeepDiveUser));
+        const storedPingoCoupleUser = await AsyncStorage.getItem('currentUser');
+        if (storedPingoCoupleUser) {
+          setUser(JSON.parse(storedPingoCoupleUser));
         }
       } catch (error) {
-        console.error('Error loading storedDeepDiveUser user:', error);
+        console.error('Error loading storedPingoCoupleUser user:', error);
       }
     };
-    loadDeepDiveUser();
+    loadPingoCoupleUser();
   }, []);
 
   return (

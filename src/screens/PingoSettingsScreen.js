@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     Image,
     Share,
+    Alert,
 } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,11 +17,9 @@ import GradientText from '../components/GradientText';
 
 
 const fontNunitoBlack = 'Nunito-Black';
-const fontNunitoRegular = 'Nunito-Regular';
 
 const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-    const styles = createPingoSettingsStyles(dimensions);
 
     const [sounds, setSounds] = useState(false);
     const [vibration, setVibration] = useState(false);
@@ -90,7 +89,7 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: -dimensions.height * 0.01,
+                marginTop: dimensions.height * 0.015,
             }}>
                 {['Settings', 'About'].map((item, index) => (
                     <TouchableOpacity
@@ -103,7 +102,6 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
                             width: dimensions.width * 0.4,
                             alignSelf: 'center',
                             alignItems: 'center',
-                            marginTop: dimensions.height * 0.05,
                             borderBottomColor: 'white',
                             marginHorizontal: dimensions.width * 0.05,
                         }}>
@@ -229,7 +227,27 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
                         alignSelf: 'center',
                     }}
                         onPress={() => {
-
+                            Alert.alert(
+                                "Delete Images",
+                                "Are you sure you want to delete all images of your moments?",
+                                [
+                                    { text: "Cancel", style: "cancel" },
+                                    {
+                                        text: "Delete",
+                                        style: "destructive",
+                                        onPress: async () => {
+                                            try {
+                                                await AsyncStorage.removeItem('capturedImages');
+                                                Alert.alert("Success", "All images have been deleted.");
+                                            } catch (error) {
+                                                console.error("Error deleting images:", error);
+                                                Alert.alert("Error", "Something went wrong while deleting images.");
+                                            }
+                                        }
+                                    }
+                                ],
+                                { cancelable: true }
+                            );
                         }}>
                         <Text
                             style={{
@@ -340,8 +358,5 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
         </SafeAreaView>
     );
 };
-
-const createPingoSettingsStyles = (dimensions) => StyleSheet.create({
-});
 
 export default PingoSettingsScreen;

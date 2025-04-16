@@ -21,6 +21,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import GradientText from '../components/GradientText';
 import { TextInput } from 'react-native-gesture-handler';
 
+import coupleQuestionsPingoData from '../components/coupleQuestionsPingoData';
+import desirePingoData from '../components/desirePingoData';
+
 const balls = [
     {
         id: 1,
@@ -78,6 +81,89 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
     const [isBallsFalled, setIsBallsFalled] = useState(false);
     const [isReadyVisibleNow, setIsReadyVisibleNow] = useState(true);
     const [answerWidth, setAnswerWidth] = useState(0);
+    const [timerSeconds, setTimerSeconds] = useState(30);
+    const [answerMessage, setAnswerMessage] = useState("Your ball has hit the hole,\nnow answer the questions");
+    const timerBarAnim = useRef(new Animated.Value(0)).current;
+    const [isAnswerGiven, setIsAnswerGiven] = useState(true);
+    const [usedQuestions, setUsedQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [usedDesires, setUsedDesires] = useState([]);
+    const [currentDesire, setCurrentDesire] = useState(null);
+
+    useEffect(() => {
+        if (winnerBall) {
+            const delayTimeout = setTimeout(() => {
+                Animated.timing(timerBarAnim, {
+                    toValue: 1,
+                    duration: 30000,
+                    useNativeDriver: false,
+                }).start(({ finished }) => {
+                    if (finished) {
+                        setAnswerMessage("You didn't answer the question, so you must fulfill your significant other's wishes.");
+                        if (selectedPingoGameMode !== 'For two Players') {
+                            handleGeneratePingoDesire();
+                        }
+                        setIsAnswerGiven(false);
+                    }
+                });
+
+                const timerInterval = setInterval(() => {
+                    setTimerSeconds(prev => {
+                        if (prev <= 1) {
+                            clearInterval(timerInterval);
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000);
+
+                return () => clearInterval(timerInterval);
+            }, 1500);
+
+            return () => clearTimeout(delayTimeout);
+        }
+    }, [winnerBall]);
+
+    const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
+
+    const progressBarWidth = timerBarAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [dimensions.width * 0.35, 0]
+    });
+
+    const dynamicBorderRadius = timerBarAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [dimensions.width * 0.02, dimensions.width * 0.04]
+    });
+
+
+
+    const handleGeneratePingoQuestion = () => {
+        let availableQuestions = coupleQuestionsPingoData.filter(q => !usedQuestions.find(used => used.id === q.id));
+        if (availableQuestions.length === 0) {
+            setUsedQuestions([]);
+            availableQuestions = coupleQuestionsPingoData;
+        }
+        const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+        const selectedQuestion = availableQuestions[randomIndex];
+        setUsedQuestions(prev => [...prev, selectedQuestion]);
+        setCurrentQuestion(selectedQuestion);
+    };
+
+
+
+    const handleGeneratePingoDesire = () => {
+        let availableDesires = desirePingoData.filter(desire => !usedDesires.find(used => used.id === desire.id));
+        if (availableDesires.length === 0) {
+            setUsedDesires([]);
+            availableDesires = desirePingoData;
+        }
+        const randomIndex = Math.floor(Math.random() * availableDesires.length);
+        const selectedDesire = availableDesires[randomIndex];
+        setUsedDesires(prev => [...prev, selectedDesire]);
+        setCurrentDesire(selectedDesire);
+    };
+
 
     const panStartXRef = useRef(0);
 
@@ -229,6 +315,43 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                 </Animated.View>
             </>
         );
+    };
+
+    const winnerPlayer =
+        winnerBall && winnerBall.id === selected1Ball.id ? player1Name : player2Name;
+
+    const handlePlayNext = () => {
+        const nextWinnerBall =
+            winnerBall && winnerBall.id === selected1Ball.id ? selected2Ball : selected1Ball;
+        setWinnerBall(nextWinnerBall);
+
+        if (selectedPingoGameMode !== 'For two Players') {
+            handleGeneratePingoQuestion();
+        }
+
+        timerBarAnim.setValue(0);
+        setTimerSeconds(30);
+        setAnswerMessage("Your ball has hit the hole,\nnow answer the questions");
+
+
+        setIsReadyVisibleNow(true);
+        setTimeout(() => {
+            setIsReadyVisibleNow(false);
+        }, 1500)
+    };
+
+
+
+    const handleNoAnswer = () => {
+        Animated.timing(timerBarAnim, {
+            toValue: 1,
+            duration: 0,
+            useNativeDriver: false,
+        }).start();
+        setTimerSeconds(0);
+        setAnswerMessage("You didn't answer the question, so you must fulfill your significant other's wishes.");
+        setIsAnswerGiven(false);
+
     };
 
     return (
@@ -471,6 +594,9 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                     }
                                     onPress={() => {
                                         setPingoGameStarted(true);
+                                        if (selectedPingoGameMode !== 'For two Players') {
+                                            handleGeneratePingoQuestion();
+                                        }
                                     }}
                                     style={{
                                         backgroundColor: 'white',
@@ -557,6 +683,14 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                             </>
                         ) : (
                             <>
+                                {!isAnswerGiven && (
+                                    <LinearGradient
+                                        style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
+                                        colors={['#FF0000', '#1A0C34']}
+                                        start={{ x: 0.5, y: 0 }}
+                                        end={{ x: 0.5, y: 1 }}
+                                    />
+                                )}
                                 <Text
                                     style={{
                                         textAlign: 'center',
@@ -567,7 +701,7 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                         paddingHorizontal: dimensions.width * 0.07,
                                         marginTop: dimensions.height * 0.02,
                                     }}>
-                                    Time for an answer!
+                                    {!isAnswerGiven ? 'No answer given!' : 'Time for an answer!'}
                                 </Text>
 
                                 <View style={{
@@ -597,10 +731,10 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                                 textTransform: 'uppercase',
                                             }}
                                         >
-                                            {player1Name}
+                                            {winnerPlayer}
                                         </Text>
                                         <Image
-                                            source={selected1Ball.image}
+                                            source={winnerBall.image}
                                             style={{
                                                 width: dimensions.height * 0.06,
                                                 height: dimensions.height * 0.06,
@@ -635,8 +769,8 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                             textTransform: 'uppercase',
                                             marginTop: dimensions.height * 0.03,
                                         }}>
-                                        Your ball has hit the hole,{'\n'}
-                                        now answer the questions
+                                        {selectedPingoGameMode !== 'For two Players' && isAnswerGiven ? currentQuestion.pingoCoupleQUestion :
+                                            selectedPingoGameMode !== 'For two Players' && !isAnswerGiven ? currentDesire.pingoCoupleDesireText : answerMessage}
                                     </Text>
 
                                     <View style={{
@@ -650,7 +784,6 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                             width: dimensions.width * 0.4,
                                             backgroundColor: 'transparent',
                                             height: dimensions.height * 0.075,
-
                                             borderColor: '#DADADA',
                                             borderRadius: dimensions.width * 0.04,
                                             borderWidth: dimensions.width * 0.003,
@@ -658,21 +791,22 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                             alignItems: 'flex-start',
                                             justifyContent: 'center'
                                         }}>
-                                            <View style={{
-                                                width: dimensions.width * 0.3,
+                                            <Animated.View style={{
+                                                width: progressBarWidth,
                                                 height: dimensions.height * 0.055,
+                                                borderRadius: dynamicBorderRadius,
                                             }}>
-                                                <LinearGradient
-                                                    style={{ flex: 1, borderRadius: dimensions.width * 0.04 }}
+                                                <AnimatedLinearGradient
+                                                    style={{ flex: 1, borderRadius: dynamicBorderRadius, }}
                                                     colors={['#FA199A', '#1A0C34']}
                                                     start={{ x: 0, y: 0.5 }}
                                                     end={{ x: 1, y: 0.5 }}
                                                 />
-                                            </View>
+                                            </Animated.View>
                                         </View>
 
                                         <GradientText
-                                            text='0:30'
+                                            text={`0:${timerSeconds < 10 ? '0' + timerSeconds : timerSeconds}`}
                                             style={{
                                                 paddingHorizontal: dimensions.width * 0.05,
                                                 textAlign: 'center',
@@ -700,63 +834,109 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
 
                                 </View>
 
-                                <TouchableOpacity
-                                    onPress={() => {
+                                {isAnswerGiven ? (
+                                    <>
+                                        <TouchableOpacity
+                                            onPress={handlePlayNext}
+                                            style={{
+                                                backgroundColor: 'white',
+                                                width: dimensions.width * 0.8,
+                                                height: dimensions.height * 0.09,
+                                                borderRadius: dimensions.width * 0.1,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                marginTop: dimensions.height * 0.03,
+                                                alignSelf: 'center'
+                                            }}>
+                                            <GradientText
+                                                text='Play next'
+                                                style={{
+                                                    paddingHorizontal: dimensions.width * 0.05,
+                                                    textAlign: 'center',
+                                                    fontSize: dimensions.width * 0.06,
+                                                    maxWidth: dimensions.width * 0.89,
+                                                    alignSelf: 'center',
+                                                    fontFamily: fontNunitoBlack,
+                                                    textTransform: 'uppercase',
+                                                }}
+                                                gradientColors={['#EF1895', '#1D0C35']}
+                                            />
+                                        </TouchableOpacity>
 
-                                    }}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        width: dimensions.width * 0.8,
-                                        height: dimensions.height * 0.09,
-                                        borderRadius: dimensions.width * 0.1,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        marginTop: dimensions.height * 0.03,
-                                        alignSelf: 'center'
-                                    }}>
-                                    <GradientText
-                                        text='Play next'
-                                        style={{
-                                            paddingHorizontal: dimensions.width * 0.05,
-                                            textAlign: 'center',
-                                            fontSize: dimensions.width * 0.06,
-                                            maxWidth: dimensions.width * 0.89,
-                                            alignSelf: 'center',
-                                            fontFamily: fontNunitoBlack,
-                                            textTransform: 'uppercase',
-                                        }}
-                                        gradientColors={['#EF1895', '#1D0C35']}
-                                    />
-                                </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={handleNoAnswer}
+                                            style={{
+                                                backgroundColor: '#FF0000',
+                                                width: dimensions.width * 0.8,
+                                                height: dimensions.height * 0.09,
+                                                borderRadius: dimensions.width * 0.1,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                marginTop: dimensions.height * 0.015,
+                                                alignSelf: 'center'
+                                            }}>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontSize: dimensions.width * 0.055,
+                                                    maxWidth: dimensions.width * 0.89,
+                                                    alignSelf: 'center',
+                                                    fontFamily: fontNunitoBlack,
+                                                    textTransform: 'uppercase',
+                                                    color: 'white',
+                                                }}
+                                            >
+                                                No answer given
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                fontFamily: fontNunitoRegular,
+                                                fontWeight: 400,
+                                                fontSize: dimensions.width * 0.04,
+                                                color: 'white',
+                                                textTransform: 'uppercase',
+                                                marginTop: dimensions.height * 0.03,
+                                            }}
+                                        >
+                                            Wish fullfilled? Continue
+                                        </Text>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                handlePlayNext();
+                                                setIsAnswerGiven(true);
+                                            }}
+                                            style={{
+                                                backgroundColor: 'white',
+                                                width: dimensions.width * 0.8,
+                                                height: dimensions.height * 0.09,
+                                                borderRadius: dimensions.width * 0.1,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                marginTop: dimensions.height * 0.01,
+                                                alignSelf: 'center'
+                                            }}>
+                                            <GradientText
+                                                text='Continue play'
+                                                style={{
+                                                    paddingHorizontal: dimensions.width * 0.05,
+                                                    textAlign: 'center',
+                                                    fontSize: dimensions.width * 0.06,
+                                                    maxWidth: dimensions.width * 0.89,
+                                                    alignSelf: 'center',
+                                                    fontFamily: fontNunitoBlack,
+                                                    textTransform: 'uppercase',
+                                                }}
+                                                gradientColors={['#EF1895', '#1D0C35']}
+                                            />
+                                        </TouchableOpacity>
+                                    </>
+                                )}
 
-                                <TouchableOpacity
-                                    onPress={() => {
-
-                                    }}
-                                    style={{
-                                        backgroundColor: '#FF0000',
-                                        width: dimensions.width * 0.8,
-                                        height: dimensions.height * 0.09,
-                                        borderRadius: dimensions.width * 0.1,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        marginTop: dimensions.height * 0.015,
-                                        alignSelf: 'center'
-                                    }}>
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            fontSize: dimensions.width * 0.055,
-                                            maxWidth: dimensions.width * 0.89,
-                                            alignSelf: 'center',
-                                            fontFamily: fontNunitoBlack,
-                                            textTransform: 'uppercase',
-                                            color: 'white',
-                                        }}
-                                    >
-                                        No answer given
-                                    </Text>
-                                </TouchableOpacity>
 
                                 <TouchableOpacity
                                     onPress={() => {
@@ -772,15 +952,15 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                         marginTop: dimensions.height * 0.05,
                                         alignSelf: 'center'
                                     }}>
-                                        <Image 
-                                            source={require('../assets/icons/homeImageIcon.png')}
-                                            style={{
-                                                width: dimensions.height * 0.04,
-                                                height: dimensions.height * 0.04,
-                                            }}
-                                            resizeMode='contain'
-                                        />
-                                    </TouchableOpacity>
+                                    <Image
+                                        source={require('../assets/icons/homeImageIcon.png')}
+                                        style={{
+                                            width: dimensions.height * 0.04,
+                                            height: dimensions.height * 0.04,
+                                        }}
+                                        resizeMode='contain'
+                                    />
+                                </TouchableOpacity>
                             </>
                         )
                     )
@@ -904,7 +1084,6 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                         </LinearGradient>
                     </View>
                 </Modal>
-
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );

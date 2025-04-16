@@ -30,22 +30,6 @@
       "sha1": "047ca2a59c253520cc46b3506744fad6ef8192c6"
     },
     {
-      "path": "src/assets/fonts/PixelifySans-Bold.ttf",
-      "sha1": "5a099af48ac82abb545b2aa6e18196ee600bdbe9"
-    },
-    {
-      "path": "src/assets/fonts/PixelifySans-Medium.ttf",
-      "sha1": "a263d2ddd97921f3c758744eee58d1fe2249dbd2"
-    },
-    {
-      "path": "src/assets/fonts/PixelifySans-Regular.ttf",
-      "sha1": "6823aad854133e5984858ddcb5c8b310a856a850"
-    },
-    {
-      "path": "src/assets/fonts/PixelifySans-SemiBold.ttf",
-      "sha1": "6d367047aad93dd5c6d9ddaf7ad96076d67bea2c"
-    },
-    {
       "path": "src/assets/fonts/Play-Bold.ttf",
       "sha1": "394247c9a5eeded939cf9d78b30687495b36f0dd"
     },
