@@ -9,6 +9,7 @@ import {
     Image,
     Share,
     Alert,
+    Modal,
 } from 'react-native';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,6 +25,7 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
     const [vibration, setVibration] = useState(false);
     const [textWidths, setTextWidths] = useState({});
     const [selectedPingoCategory, setSelectedPingoCategory] = useState('Settings');
+    const [deleteAlertVisible, setDeleteAlertVisible] = useState(false);
 
     const onTextLayout = (item, event) => {
         const { width } = event.nativeEvent.layout;
@@ -59,7 +61,7 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
     const sharePingoApp = async () => {
         try {
             await Share.share({
-                message: `Join Pingo Questions for Couples! A fun game to get to know each other better. Download it now!`,
+                message: `Download Pingo Questions for Couples! A fun game to get to know each other better. Download it now!`,
             });
         } catch (error) {
         }
@@ -226,27 +228,7 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
                         alignSelf: 'center',
                     }}
                         onPress={() => {
-                            Alert.alert(
-                                "Delete Images",
-                                "Are you sure you want to delete all images of your moments?",
-                                [
-                                    { text: "Cancel", style: "cancel" },
-                                    {
-                                        text: "Delete",
-                                        style: "destructive",
-                                        onPress: async () => {
-                                            try {
-                                                await AsyncStorage.removeItem('capturedImages');
-                                                Alert.alert("Success", "All images have been deleted.");
-                                            } catch (error) {
-                                                console.error("Error deleting images:", error);
-                                                Alert.alert("Error", "Something went wrong while deleting images.");
-                                            }
-                                        }
-                                    }
-                                ],
-                                { cancelable: true }
-                            );
+                            setDeleteAlertVisible(true);
                         }}>
                         <Text
                             style={{
@@ -354,6 +336,102 @@ const PingoSettingsScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => 
                 </>
             )}
 
+            {deleteAlertVisible && (
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={deleteAlertVisible}
+                    onRequestClose={() => setDeleteAlertVisible(false)}
+                >
+                    <View style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <View style={{
+                            width: dimensions.width * 0.8,
+                            backgroundColor: 'white',
+                            borderRadius: dimensions.width * 0.05,
+                            padding: dimensions.width * 0.05,
+                            alignItems: 'center'
+                        }}>
+                            <Text style={{
+                                fontFamily: fontNunitoBlack,
+                                fontSize: dimensions.width * 0.05,
+                                textTransform: 'uppercase',
+                                marginBottom: dimensions.height * 0.02,
+                                textAlign: 'center'
+                            }}>
+                                Delete Images
+                            </Text>
+                            <Text style={{
+                                fontFamily: fontNunitoBlack,
+                                fontSize: dimensions.width * 0.04,
+                                textAlign: 'center',
+                                marginBottom: dimensions.height * 0.04,
+                            }}>
+                                Are you sure you want to delete all images of your moments?
+                            </Text>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                            }}>
+                                <TouchableOpacity
+                                    onPress={() => setDeleteAlertVisible(false)}
+                                    style={{
+                                        flex: 1,
+                                        padding: dimensions.width * 0.03,
+                                        alignItems: 'center',
+                                        borderRadius: dimensions.width * 0.05,
+                                        backgroundColor: '#ccc',
+                                        marginRight: dimensions.width * 0.02,
+                                    }}
+                                >
+                                    <Text style={{
+                                        fontFamily: fontNunitoBlack,
+                                        fontSize: dimensions.width * 0.045,
+                                        textTransform: 'uppercase',
+                                    }}>
+                                        Cancel
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        try {
+                                            await AsyncStorage.removeItem('capturedImages');
+                                            setDeleteAlertVisible(false);
+                                            Alert.alert("Success", "All images have been deleted.");
+                                        } catch (error) {
+                                            console.error("Error deleting images:", error);
+                                            setDeleteAlertVisible(false);
+                                            Alert.alert("Error", "Something went wrong while deleting images.");
+                                        }
+                                    }}
+                                    style={{
+                                        flex: 1,
+                                        padding: dimensions.width * 0.03,
+                                        alignItems: 'center',
+                                        borderRadius: dimensions.width * 0.05,
+                                        backgroundColor: '#FF9A9A',
+                                        marginLeft: dimensions.width * 0.02,
+                                    }}
+                                >
+                                    <Text style={{
+                                        fontFamily: fontNunitoBlack,
+                                        fontSize: dimensions.width * 0.045,
+                                        textTransform: 'uppercase',
+                                        color: '#960000'
+                                    }}>
+                                        Delete
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+            )}
         </SafeAreaView>
     );
 };

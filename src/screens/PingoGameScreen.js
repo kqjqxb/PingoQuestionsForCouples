@@ -948,7 +948,7 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
 
                                 <TouchableOpacity
                                     onPress={() => {
-                                        setSelectedPingoScreen('Home');
+                                        // setSelectedPingoScreen('Home');
                                     }}
                                     style={{
                                         backgroundColor: 'white',
@@ -1028,6 +1028,9 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
                                     {balls.map((ball) => (
                                         <TouchableOpacity
                                             key={ball.id}
+
+                                            disabled={true}
+                                            
                                             onPress={() => {
                                                 if (selectBallForPlayer === 1) {
                                                     if (selected2Ball && selected2Ball.id === ball.id) {
