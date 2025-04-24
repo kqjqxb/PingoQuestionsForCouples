@@ -87,6 +87,7 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [usedDesires, setUsedDesires] = useState([]);
     const [currentDesire, setCurrentDesire] = useState(null);
+    const [unusedDesires, setUnusedDesires] = useState(desirePingoData);
 
     useEffect(() => {
         if (winnerBall) {
@@ -151,16 +152,24 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
 
 
     const handleGeneratePingoDesire = () => {
-        let availableDesires = desirePingoData.filter(desire => !usedDesires.find(used => used.id === desire.id));
-        if (availableDesires.length === 0) {
-            setUsedDesires([]);
-            availableDesires = desirePingoData;
+        // Якщо масив порожній, скидаємо його до початкового стану
+        if (unusedDesires.length === 0) {
+            setUnusedDesires(desirePingoData);
         }
-        const randomIndex = Math.floor(Math.random() * availableDesires.length);
-        const selectedDesire = availableDesires[randomIndex];
-        setUsedDesires(prev => [...prev, selectedDesire]);
+        // Використовуємо поточний масив невикористаних бажань
+        const currentUnused = unusedDesires.length === 0 ? desirePingoData : unusedDesires;
+        const randomIndex = Math.floor(Math.random() * currentUnused.length);
+        const selectedDesire = currentUnused[randomIndex];
+        // Оновлюємо масив невикористаних, видаляючи використане бажання
+        const updatedUnusedDesires = currentUnused.filter(desire => desire.id !== selectedDesire.id);
+        setUnusedDesires(updatedUnusedDesires);
         setCurrentDesire(selectedDesire);
+        console.log('selected desire ', selectedDesire);
     };
+
+    // useEffect(() => {
+    //     console.log('selected desire ', selectedDesire)
+    // }, [availableDesires])
 
 
     const panStartXRef = useRef(0);
@@ -341,6 +350,7 @@ const PingoGameScreen = ({ setSelectedPingoScreen, setBackgroundMusic }) => {
 
 
     const handleNoAnswer = () => {
+        if (selectedPingoGameMode === 'Online Game') handleGeneratePingoDesire();
         Animated.timing(timerBarAnim, {
             toValue: 1,
             duration: 0,
